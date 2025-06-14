@@ -224,6 +224,79 @@
           }
         }
       }
+    },
+    "/api/user/": {
+      "get": {
+        "summary": "Get user information",
+        "tags": [
+          "User"
+        ],
+        "description": "Get user information",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi ma'lumotlari",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "id": {
+                      "type": "string",
+                      "format": "uuid",
+                      "example": "3eb84c71-14c5-4b45-82a2-7707f848e8ce"
+                    },
+                    "first_name": {
+                      "type": "string",
+                      "example": "string"
+                    },
+                    "last_name": {
+                      "type": "string",
+                      "example": "string"
+                    },
+                    "phone": {
+                      "type": "string",
+                      "pattern": "^998[0-9]{9}$",
+                      "example": "998978222427"
+                    },
+                    "role": {
+                      "type": "string",
+                      "enum": [
+                        "user",
+                        "admin"
+                      ],
+                      "example": "user"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-06-14 20:50:50"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time",
+                      "example": "2025-06-14 20:50:50"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Token noto'g'ri yoki buzilgan"
+          },
+          "404": {
+            "description": "Foydalanuvchi topilmadi"
+          }
+        }
+      }
     }
   },
   "tags": [
