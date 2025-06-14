@@ -1,7 +1,8 @@
+const { generateAccessToken, generateRefreshToken } = require("../controllers/auth/tokenController");
 const { db } = require("../db/db");
-const { userFindByPhoneOrID, insertUser } = require("../db/queries");
+const { userFindByPhoneOrID, insertUser, userFindGeneric } = require("../db/queries");
 const { roles } = require("../utils/roles");
-const { isValidUserID, isValidPhone } = require("../utils/valid");
+const {  isValidPhone, isValidPassword } = require("../utils/valid");
 const bcrypt = require("bcrypt");
 
 const DEFAULT_AVATAR = "../uploads/avatars/default.png";
@@ -10,23 +11,13 @@ function createUser(user, callback) {
   const {
     id,
     phone,
-    email = null,
-    firstname = "",
-    lastname = "",
-    group = "",
-    role = "student",
+    first_name = "",
+    last_name = "",
+    role = "user",
     password,
-    avatar = DEFAULT_AVATAR,
   } = user;
 
   // --- Validatsiya ---
-  if (!isValidUserID(id)) {
-    return callback({
-      code: 400,
-      message: "ID noto‘g‘ri formatda (AB1234567)",
-    });
-  }
-
   if (!isValidPhone(phone)) {
     return callback({
       code: 400,
@@ -34,29 +25,29 @@ function createUser(user, callback) {
     });
   }
 
-  if (!roles.includes(role)) {
-    return callback({ code: 400, message: "Rol noto‘g‘ri tanlangan" });
-  }
-
-  if (!password || password.length < 6) {
+  if (!isValidPassword(password)) {
     return callback({
       code: 400,
       message: "Parol majburiy va kamida 6 belgidan iborat bo‘lishi kerak",
     });
   }
 
-  db.get(userFindByPhoneOrID, [id, phone], (err, row) => {
+  if (!roles.includes(role)) {
+    return callback({ code: 400, message: "Rol noto‘g‘ri tanlangan" });
+  }
+
+  db.get(userFindGeneric("phone", phone), (err, row) => {
     if (err)
       return callback({ code: 500, message: "Bazaga murojaatda xatolik" });
 
     if (row) {
       return callback({
         code: 409,
-        message: "Bu ID yoki telefon raqam allaqachon mavjud",
+        message: "Bu telefon raqam allaqachon mavjud",
       });
     }
 
-    // --- PAROLNI HASH QILAMIZ ---
+    // --- PAROLNI HASH QILAMIZ VA USERNI YARATAMIZ ---
     bcrypt.hash(password, 10, (err, hashedPassword) => {
       if (err)
         return callback({
@@ -69,13 +60,10 @@ function createUser(user, callback) {
         [
           id,
           phone,
-          email,
           hashedPassword,
-          firstname,
-          lastname,
-          group,
-          "student",
-          avatar,
+          first_name,
+          last_name,
+          role,
         ],
         function (err) {
           if (err)
@@ -90,6 +78,25 @@ function createUser(user, callback) {
   });
 }
 
+function loginUser(phone, password, user_agent, ip, callback) {
+  db.get(userFindGeneric("phone", phone), (err, row) => {
+    if (err) return callback({ code: 500, message: "Bazaga murojaatda xatolik" });
+    if (!row) return callback({ code: 404, message: "Foydalanuvchi topilmadi" });
+    bcrypt.compare(password, row.password, (err, result) => {
+      if (err) return callback({ code: 500, message: "Parolni xashlashda xatolik" });
+      if (!result) return callback({ code: 401, message: "Parol noto‘g‘ri" });
+      generateAccessToken(row.id, row.role, (err, accessToken) => {
+        if (err) return callback({ code: 500, message: "Access token yaratishda xatolik" });
+        generateRefreshToken(row.id, row.role, user_agent, ip, (err, refreshToken) => {
+          if (err) return callback({ code: 500, message: "Refresh token yaratishda xatolik" });
+          callback(null, { accessToken, refreshToken });
+        });
+      });
+    });
+  });
+}
+
 module.exports = {
   createUser,
+  loginUser,
 };

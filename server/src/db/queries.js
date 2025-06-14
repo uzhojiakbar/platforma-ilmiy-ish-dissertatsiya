@@ -15,10 +15,13 @@ const insertUser = `
     ) VALUES (?, ?, ?, ?, ?, ?)
   `;
 const userFindByPhoneOrID = `SELECT * FROM users WHERE id = ? OR phone = ?`;
+const userFindGeneric = (key, value) => {
+  return `SELECT * FROM users WHERE ${key} = ${value}`;
+}
 
 module.exports = {
   userFindByPhoneOrID,
-  userFindByUsername,
+  userFindGeneric,
   insertUser,
   userFindByPhone,
 };

@@ -7,10 +7,10 @@ const { CustomError } = require("../components/customError.js");
 const { userFindByUsername, insertUser } = require("./queries.js");
 const { roles } = require("../utils/roles.js");
 
-const DB_PATH = process.env.DATABASE_URL;
+const DB_PATH = process.env.DB_PATH;
 
 if (!DB_PATH) {
-    console.error("❌ .env faylida DATABASE_URL aniqlanmagan!");
+    console.error("❌ .env faylida DB_PATH aniqlanmagan!");
     process.exit(1);
 }
 

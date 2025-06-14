@@ -1,39 +1,284 @@
 {
-    "openapi": "3.1.0",
-    "info": {
-      "title": "Platforma - Auth API",
-      "version": "2.1.1",
-      "description": "This is the API documentation for the Platforma application. This section covers authentication, including login and registration."
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Platforma - Auth API",
+    "version": "2.1.1",
+    "description": "This is the API documentation for the Platforma application. This section covers authentication, including login and registration."
+  },
+  "servers": [
+    {
+      "url": "http://localhost:5555",
+      "description": "Local server"
     },
-    "servers": [
-      {
-        "url": "http://localhost:5555",
-        "description": "Local server"
-      },
-      {
-        "url": "http://37.27.215.130:5050",
-        "description": "Mexroj server"
-      }
-    ],
-    "paths": {
-    },
-    "tags": [
-        {
-          "name": "Admin",
-          "description": "Adminlar boshqaruvi"
-        },
-        {
-          "name": "User",
-          "description": "Foydalanuvchilarlar boshqaruvi (foydaluvchilarning o`zini boshqarishi uchun)"
-        },
-        {
-          "name": "Auth",
-          "description": "Avtorizatsiya uchun pointlar"
-        }
-      ],
-    "components": {
-    "schemas": {
+    {
+      "url": "http://37.27.215.130:5050",
+      "description": "Mexroj server"
     }
+  ],
+  "paths": {
+    "/api/auth/register": {
+      "post": {
+        "summary": "Register a new user",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Register a new user with the given information",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "description": "User's phone number"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User's password"
+                  },
+                  "first_name": {
+                    "type": "string",
+                    "description": "User's first name"
+                  },
+                  "last_name": {
+                    "type": "string",
+                    "description": "User's last name"
+                  },
+                  "role": {
+                    "type": "string",
+                    "description": "User's role"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi muvaffaqiyatli yaratildi"
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "409": {
+            "description": "Bunday foydalanuvchi allaqachon mavjud"
+          },
+          "500": {
+            "description": "Serverda xatolik yuz berdi"
+          }
+        }
+      }
+    },
+    "/api/auth/login": {
+      "post": {
+        "summary": "Login a user",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Login a user with the given information",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "phone": {
+                    "type": "string",
+                    "description": "User's phone number"
+                  },
+                  "password": {
+                    "type": "string",
+                    "description": "User's password"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi muvaffaqiyatli tizimga kirildi"
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Parol noto‘g‘ri"
+          },
+          "404": {
+            "description": "Foydalanuvchi topilmadi"
+          },
+          "500": {
+            "description": "Serverda xatolik yuz berdi"
+          }
+        }
+      }
+    },
+    "/api/auth/logout": {
+      "post": {
+        "summary": "Logout a user",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Logout a user",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "accessToken": {
+                    "type": "string",
+                    "description": "User's access token"
+                  },
+                  "refreshToken": {
+                    "type": "string",
+                    "description": "User's refresh token"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi muvaffaqiyatli tizimdan chiqdi"
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Token noto‘g‘ri yoki buzilgan"
+          },
+          "404": {
+            "description": "Foydalanuvchi topilmadi"
+          }
+        }
+      }
+    },
+    "/api/auth/logout-all": {
+      "post": {
+        "summary": "Logout all sessions of a user",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Logout all sessions of a user",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchining barcha sessiyasi o'chirildi"
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "500": {
+            "description": "Serverda xatolik yuz berdi"
+          }
+        }
+      }
+    },
+    "/api/auth/refresh-token": {
+      "post": {
+        "summary": "Refresh a user's access token",
+        "tags": [
+          "Auth"
+        ],
+        "description": "Refresh a user's access token",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "accessToken": {
+                    "type": "string",
+                    "description": "User's access token"
+                  },
+                  "refreshToken": {
+                    "type": "string",
+                    "description": "User's refresh token"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi muvaffaqiyatli token yangilandi"
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Token noto‘g‘ri yoki buzilgan"
+          }
+        }
+      }
+    }
+  },
+  "tags": [
+    {
+      "name": "Admin",
+      "description": "Adminlar boshqaruvi"
+    },
+    {
+      "name": "User",
+      "description": "Foydalanuvchilarlar boshqaruvi (foydaluvchilarning o`zini boshqarishi uchun)"
+    },
+    {
+      "name": "Auth",
+      "description": "Avtorizatsiya uchun pointlar"
+    }
+  ],
+  "components": {
+    "schemas": {
+      "User": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the user"
+          },
+          "phone": {
+            "type": "string",
+            "pattern": "^998[0-9]{9}$",
+            "description": "Uzbekistan phone number in format 998XXXXXXXXX"
+          },
+          "password": {
+            "type": "string",
+            "minLength": 6,
+            "description": "User's password (minimum 6 characters)"
+          },
+          "first_name": {
+            "type": "string",
+            "description": "User's first name"
+          },
+          "last_name": {
+            "type": "string",
+            "description": "User's last name"
+          },
+          "role": {
+            "type": "string",
+            "enum": [
+              "user",
+              "admin",
+              "chief"
+            ],
+            "description": "User's role in the system"
+          }
+        }
+      }
     },
     "securitySchemes": {
       "bearerAuth": {
@@ -42,4 +287,5 @@
         "bearerFormat": "JWT"
       }
     }
+  }
 }

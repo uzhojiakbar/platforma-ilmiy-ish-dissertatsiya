@@ -1,5 +1,5 @@
 const roles = [
-    "chied",
+    "chief",
     "admin",
     "user",
   ];
