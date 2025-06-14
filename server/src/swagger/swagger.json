@@ -1,0 +1,45 @@
+{
+    "openapi": "3.1.0",
+    "info": {
+      "title": "Platforma - Auth API",
+      "version": "2.1.1",
+      "description": "This is the API documentation for the Platforma application. This section covers authentication, including login and registration."
+    },
+    "servers": [
+      {
+        "url": "http://localhost:5555",
+        "description": "Local server"
+      },
+      {
+        "url": "http://37.27.215.130:5050",
+        "description": "Mexroj server"
+      }
+    ],
+    "paths": {
+    },
+    "tags": [
+        {
+          "name": "Admin",
+          "description": "Adminlar boshqaruvi"
+        },
+        {
+          "name": "User",
+          "description": "Foydalanuvchilarlar boshqaruvi (foydaluvchilarning o`zini boshqarishi uchun)"
+        },
+        {
+          "name": "Auth",
+          "description": "Avtorizatsiya uchun pointlar"
+        }
+      ],
+    "components": {
+    "schemas": {
+    }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "JWT"
+      }
+    }
+}
