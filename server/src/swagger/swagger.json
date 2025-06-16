@@ -7,12 +7,12 @@
   },
   "servers": [
     {
-      "url": "http://localhost:5555",
-      "description": "Local server"
-    },
-    {
       "url": "http://37.27.215.130:5050",
       "description": "Mexroj server"
+    },
+    {
+      "url": "http://localhost:5555",
+      "description": "Local server"
     }
   ],
   "paths": {
