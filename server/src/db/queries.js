@@ -18,10 +18,14 @@ const userFindByPhoneOrID = `SELECT * FROM users WHERE id = ? OR phone = ?`;
 const userFindGeneric = (key, value) => {
   return `SELECT id, first_name, last_name,password, phone, role, created_at, updated_at FROM users WHERE ${key} = '${value}'`;
 }
+const userSessionsGeneric = (key, value) => {
+  return `SELECT * FROM sessions WHERE ${key} = '${value}'`;
+}
 
 module.exports = {
   userFindByPhoneOrID,
   userFindGeneric,
   insertUser,
   userFindByPhone,
+  userSessionsGeneric,
 };

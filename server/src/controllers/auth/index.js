@@ -66,7 +66,7 @@ const logoutAll = (req, res) => {
 
 const refreshToken = (req, res) => {
   const { accessToken,refreshToken } = req.body;
-  generateNewAccessTokenWithRefreshToken(accessToken,refreshToken, (err, result) => {
+  generateNewAccessTokenWithRefreshToken("123",refreshToken, (err, result) => {
     if (err) return res.status(err.code).json({ message: err.message });
     return res.status(200).json(result);
   });

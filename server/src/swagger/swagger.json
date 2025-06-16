@@ -199,10 +199,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "accessToken": {
-                    "type": "string",
-                    "description": "User's access token"
-                  },
                   "refreshToken": {
                     "type": "string",
                     "description": "User's refresh token"

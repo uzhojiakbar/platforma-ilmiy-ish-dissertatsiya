@@ -1,6 +1,6 @@
 const { CustomError } = require("../../components/customError");
 const { db } = require("../../db/db");
-const { userFindGeneric } = require("../../db/queries");
+const { userFindGeneric, userSessionsGeneric } = require("../../db/queries");
 
 function getUserInfo(req, res) {
   try {
@@ -48,4 +48,37 @@ function getUserInfo(req, res) {
   }
 }
 
-module.exports = { getUserInfo };
+function getUserSessions(req, res) {
+  try {
+    const { id: user_id } = req.userInfo;
+    if (!user_id) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required"
+      });
+    }
+
+    db.all(userSessionsGeneric("id", user_id), (err, sessions) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Internal server error"
+        });
+      }
+    });
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res.status(error.code).json({
+        success: false,
+        message: error.message
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      });
+    }
+  }
+}
+
+module.exports = { getUserInfo, getUserSessions };

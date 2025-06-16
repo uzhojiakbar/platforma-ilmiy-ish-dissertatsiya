@@ -27,6 +27,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
       createUsersTable();
       createTokenTable();
       createAccessTokenTable();
+      createSessionsTable();
     }
 });
 
@@ -96,6 +97,27 @@ function createAccessTokenTable() {
   });
 }
 
+function createSessionsTable() {
+  const createTableSQL = `
+    CREATE TABLE IF NOT EXISTS sessions (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    user_agent TEXT,
+    ip TEXT,
+    access_token TEXT,
+    refresh_token TEXT,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
+  `;
+
+  db.run(createTableSQL, (err) => {
+    if (err) {
+      console.error("❌ sessions Jadval yaratishda xatolik:", err.message);
+    } else {
+      console.log("✅ sessions jadvali tayyor");
+    }
+  });
+}
 
 
 
