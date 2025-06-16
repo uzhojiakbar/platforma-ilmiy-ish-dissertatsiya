@@ -7,7 +7,7 @@
   },
   "servers": [
     {
-      "url": "http://37.27.215.130:5050",
+      "url": "http://65.108.155.163:2805/",
       "description": "Mexroj server"
     },
     {
