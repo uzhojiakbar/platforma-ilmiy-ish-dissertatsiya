@@ -7,12 +7,12 @@
   },
   "servers": [
     {
-      "url": "http://65.108.155.163:2805/",
-      "description": "Mexroj server"
-    },
-    {
       "url": "http://localhost:5555",
       "description": "Local server"
+    },
+    {
+      "url": "http://65.108.155.163:2805/",
+      "description": "Mexroj server"
     }
   ],
   "paths": {
@@ -106,7 +106,7 @@
             "description": "Nimadur xato ketdi"
           },
           "401": {
-            "description": "Parol noto‘g‘ri"
+            "description": "Parol noto'g'ri"
           },
           "404": {
             "description": "Foydalanuvchi topilmadi"
@@ -152,7 +152,7 @@
             "description": "Nimadur xato ketdi"
           },
           "401": {
-            "description": "Token noto‘g‘ri yoki buzilgan"
+            "description": "Token noto'g'ri yoki buzilgan"
           },
           "404": {
             "description": "Foydalanuvchi topilmadi"
@@ -216,7 +216,7 @@
             "description": "Nimadur xato ketdi"
           },
           "401": {
-            "description": "Token noto‘g‘ri yoki buzilgan"
+            "description": "Token noto'g'ri yoki buzilgan"
           }
         }
       }
@@ -290,6 +290,67 @@
           },
           "404": {
             "description": "Foydalanuvchi topilmadi"
+          }
+        }
+      }
+    },
+    "/api/user/sessions": {
+      "get": {
+        "summary": "Get user sessions",
+        "tags": [
+          "User"
+        ],
+        "description": "Get user sessions",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi sessiyasi"
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Token noto'g'ri yoki buzilgan"
+          }
+        }
+      }
+    },
+    "/api/user/session/{session_id}": {
+      "get": {
+        "summary": "Get user session",
+        "tags": [
+          "User"
+        ],
+        "description": "Get user session",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "in": "path",
+            "name": "session_id",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Session ID"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi sessiyasi"
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Token noto'g'ri yoki buzilgan"
           }
         }
       }

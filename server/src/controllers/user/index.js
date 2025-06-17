@@ -58,13 +58,23 @@ function getUserSessions(req, res) {
       });
     }
 
-    db.all(userSessionsGeneric("id", user_id), (err, sessions) => {
+    db.all(userSessionsGeneric("user_id", user_id), (err, sessions) => {
       if (err) {
         return res.status(500).json({
           success: false,
           message: "Internal server error"
         });
       }
+
+      const sessionsData = sessions?.map((session) => {
+        return {
+          session_id: session?.id,
+          user_id: session?.user_id,
+          user_agent: session?.user_agent
+        }
+      })
+
+      res.status(200).json(sessionsData || {});
     });
   } catch (error) {
     if (error instanceof CustomError) {
@@ -81,4 +91,61 @@ function getUserSessions(req, res) {
   }
 }
 
-module.exports = { getUserInfo, getUserSessions };
+function GetUserSession(req, res) {
+  try {
+    const { id: user_id } = req.userInfo;
+    if (!user_id) {
+      return res.status(400).json({
+        success: false,
+        message: "User ID is required"
+      });
+    }
+
+    const { session_id } = req.params;
+    if (!session_id) {
+      return res.status(400).json({
+        success: false,
+        message: "Session ID is required"
+      });
+    }
+
+    db.get(userSessionsGeneric("id", session_id), (err, session) => {
+      if (err) {
+        return res.status(500).json({
+          success: false,
+          message: "Internal server error"
+        });
+      }
+      if (session?.user_id !== user_id) {
+        return res.status(403).json({
+          success: false,
+          message: "You are not authorized to access this session"
+        });
+      }
+
+      const sessionData = {
+        session_id: session?.id,
+        user_id: session?.user_id,
+        user_agent: session?.user_agent,
+        ip: session?.ip,
+        created_at: session?.created_at,
+      }
+
+      return res.status(200).json(sessionData || {});
+    });
+  } catch (error) {
+    if (error instanceof CustomError) {
+      res.status(error.code).json({
+        success: false,
+        message: error.message
+      });
+    } else {
+      res.status(500).json({
+        success: false,
+        message: "Internal server error"
+      });
+    }
+  }
+}
+
+module.exports = { getUserInfo, getUserSessions,GetUserSession };
