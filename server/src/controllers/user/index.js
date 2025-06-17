@@ -123,7 +123,11 @@ function GetUserSession(req, res) {
         });
       }
 
-      return res.status(200).json(session || {});
+      return res.status(200).json({
+        ...session,
+        access_token: null,
+        refresh_token: null
+      } || {});
     });
   } catch (error) {
     if (error instanceof CustomError) {
