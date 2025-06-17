@@ -123,15 +123,7 @@ function GetUserSession(req, res) {
         });
       }
 
-      const sessionData = {
-        session_id: session?.id,
-        user_id: session?.user_id,
-        user_agent: session?.user_agent,
-        ip: session?.ip,
-        created_at: session?.created_at,
-      }
-
-      return res.status(200).json(sessionData || {});
+      return res.status(200).json(session || {});
     });
   } catch (error) {
     if (error instanceof CustomError) {
