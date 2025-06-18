@@ -7,12 +7,12 @@
   },
   "servers": [
     {
-      "url": "http://65.108.155.163:2805/",
-      "description": "Mexroj server"
-    },
-    {
       "url": "http://localhost:5555",
       "description": "Local server"
+    },
+    {
+      "url": "http://65.108.155.163:2805/",
+      "description": "Mexroj server"
     }
   ],
   "paths": {
@@ -131,10 +131,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "accessToken": {
-                    "type": "string",
-                    "description": "User's access token"
-                  },
                   "refreshToken": {
                     "type": "string",
                     "description": "User's refresh token"
@@ -351,6 +347,181 @@
           },
           "401": {
             "description": "Token noto'g'ri yoki buzilgan"
+          }
+        }
+      }
+    },
+    "/api/user/notifications": {
+      "get": {
+        "summary": "Get user notifications",
+        "tags": [
+          "User"
+        ],
+        "description": "Get user notifications",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi xabarlari",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "3eb84c71-14c5-4b45-82a2-7707f848e8ce"
+                      },
+                      "user_id": {
+                        "type": "string",
+                        "format": "uuid",
+                        "example": "3eb84c71-14c5-4b45-82a2-7707f848e8ce"
+                      },
+                      "title": {
+                        "type": "string",
+                        "example": "Xabar sarlavhasi"
+                      },
+                      "message": {
+                        "type": "string",
+                        "example": "Xabar matni"
+                      },
+                      "link": {
+                        "type": "string",
+                        "example": "Xabar havolasi"
+                      },
+                      "is_read": {
+                        "type": "boolean",
+                        "example": false
+                      },
+                      "created_at": {
+                        "type": "string",
+                        "format": "date-time",
+                        "example": "2025-06-14 20:50:50"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Token noto'g'ri yoki buzilgan"
+          },
+          "404": {
+            "description": "Foydalanuvchi topilmadi"
+          }
+        }
+      },
+      "post": {
+        "summary": "Create user notification",
+        "tags": [
+          "User"
+        ],
+        "description": "Create user notification",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "user_id": {
+                    "type": "string",
+                    "format": "uuid",
+                    "example": "3eb84c71-14c5-4b45-82a2-7707f848e8ce"
+                  },
+                  "title": {
+                    "type": "string",
+                    "example": "Xabar sarlavhasi"
+                  },
+                  "message": {
+                    "type": "string",
+                    "example": "Xabar matni"
+                  },
+                  "link": {
+                    "type": "string",
+                    "example": "Xabar havolasi"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Xabar muvaffaqiyatli yaratildi"
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Token noto'g'ri yoki buzilgan"
+          },
+          "500": {
+            "description": "Serverda xatolik yuz berdi"
+          }
+        }
+      }
+    },
+    "/api/user/notifications/count": {
+      "get": {
+        "summary": "Get user new notifications count",
+        "tags": [
+          "User"
+        ],
+        "description": "Get user new notifications count",
+        "security": [
+          {
+            "bearerAuth": []
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Foydalanuvchi yangi xabarlar soni",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Yangi xabarlar soni"
+                    },
+                    "count": {
+                      "type": "number",
+                      "example": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Nimadur xato ketdi"
+          },
+          "401": {
+            "description": "Token noto'g'ri yoki buzilgan"
+          },
+          "500": {
+            "description": "Serverda xatolik yuz berdi"
           }
         }
       }

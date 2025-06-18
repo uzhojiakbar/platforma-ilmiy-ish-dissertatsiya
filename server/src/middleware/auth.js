@@ -8,10 +8,10 @@ function authenticateToken(req, res, next) {
   const current_user_agent = req.headers["user-agent"];
   const current_ip = req.ip || req.connection.remoteAddress;
 
-  console.log("current_user_agent", current_user_agent);
-  console.log("current_ip", current_ip);
-  console.log("token", token);
-  console.log("authHeader", authHeader);
+  // console.log("current_user_agent", current_user_agent);
+  // console.log("current_ip", current_ip);
+  // console.log("token", token);
+  // console.log("authHeader", authHeader);
 
   if (!token) {
     return res.status(401).json({ error: "Token talab qilinadi" });
@@ -82,6 +82,22 @@ function authenticateToken(req, res, next) {
   });
 }
 
+function AdminOrThisUser(req, res, next) {
+  
+  // Agar body da user_id bo'lmasa, request qilayotgan userning id sini biriktiramiz
+  if (!req.body || !req.body.user_id || req.body.user_id === undefined || req.body.user_id === null) {
+    if (!req.body) req.body = {};
+    req.body.user_id = req.userInfo.id.toString();
+  }
+  console.log("req.userInfo", req.userInfo);
+  console.log("req.body", req.body);
+  
+  if (req.userInfo?.role !== "admin" && req.userInfo?.id !== req.body?.user_id) {
+    return res.status(403).json({ error: "Bu buyruq faqat adminlar yoki foydalanuvchi o'zini tanlagan holda amalga oshiriladi" });
+  }
+  next();
+}
+
 // function authorizeAdmin(req, res, next) {
 //   if (req.userInfo?.role !== "admin") {
 //     return res.status(403).json({ error: "Faqat adminlar ruxsat oladi" });
@@ -91,5 +107,6 @@ function authenticateToken(req, res, next) {
 
 module.exports = {
   authenticateToken,
+  AdminOrThisUser,
 //   authorizeAdmin,
 };

@@ -21,6 +21,15 @@ const userFindGeneric = (key, value) => {
 const userSessionsGeneric = (key, value) => {
   return `SELECT * FROM sessions WHERE ${key} = '${value}'`;
 }
+const userNotificationsGeneric = (key, value) => {
+  return `SELECT * FROM user_notifications WHERE ${key} = '${value}'`;
+}
+
+
+function createUserNotificationQuery(id,user_id, title, message, link) {
+  return `INSERT INTO user_notifications (id, user_id, title, message, link) VALUES ('${id}', '${user_id}', '${title}', '${message}', '${link}')`;
+}
+
 
 module.exports = {
   userFindByPhoneOrID,
@@ -28,4 +37,6 @@ module.exports = {
   insertUser,
   userFindByPhone,
   userSessionsGeneric,
+  userNotificationsGeneric,
+  createUserNotificationQuery,
 };

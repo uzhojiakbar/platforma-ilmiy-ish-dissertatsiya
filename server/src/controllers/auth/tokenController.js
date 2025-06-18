@@ -65,7 +65,9 @@ function DeleteOneSession(accessToken, refreshToken, callback) {
   });
 }
 
-function DeleteAllSessions(user_id, callback) {
+function DeleteAllSessions(user_id, refreshToken, callback) {
+
+  
   const query = `DELETE FROM sessions WHERE user_id = ?`;
   db.run(query, [user_id], function (err) {
     if (err) return callback({ code: 500, message: "Sessiyalarni o'chirishda xatolik" });

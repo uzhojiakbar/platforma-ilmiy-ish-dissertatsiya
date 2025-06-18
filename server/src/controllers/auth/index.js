@@ -54,11 +54,12 @@ const logout = (req, res) => {
 
 const logoutAll = (req, res) => {
   const { id: user_id } = req.userInfo;
+  const { refreshToken } = req.body;
 
   console.log("user_id",user_id);
   console.log("req.userInfo",req.userInfo);
   
-  DeleteAllSessions(user_id, (err, result) => {
+  DeleteAllSessions(user_id, refreshToken, (err, result) => {
     if (err) return res.status(err.code).json({ message: err.message });
     return res.status(200).json({ message: "Foydalanuvchining barcha sessiyasi o'chirildi" });
   });

@@ -28,6 +28,7 @@ const db = new sqlite3.Database(DB_PATH, (err) => {
       createTokenTable();
       createAccessTokenTable();
       createSessionsTable();
+      createUserNotificationsTable()
     }
 });
 
@@ -119,6 +120,28 @@ function createSessionsTable() {
   });
 }
 
+
+function createUserNotificationsTable() {
+  const createTableSQL = `
+    CREATE TABLE IF NOT EXISTS user_notifications (
+    id TEXT PRIMARY KEY,
+    user_id TEXT NOT NULL,
+    title TEXT NOT NULL,
+    message TEXT NOT NULL,
+    link TEXT,
+    is_read BOOLEAN NOT NULL DEFAULT FALSE,
+    created_at TEXT NOT NULL DEFAULT CURRENT_TIMESTAMP
+  );
+  `;
+
+  db.run(createTableSQL, (err) => {
+    if (err) {
+      console.error("❌ user_notifications Jadval yaratishda xatolik:", err.message);
+    } else {
+      console.log("✅ user_notifications jadvali tayyor");
+    }
+  });
+}
 
 
 module.exports = {
